@@ -1,0 +1,6 @@
+module.exports={
+    SERVICE_ID:"VA76e3d1f664412b019ce6898a96e6515d",
+    ACCOUNT_SID:"AC239babfb27a147534282ec3f3817dcaa",
+    AUTH_TOKEN:"7c3c7c4f63769a7192581bedffe46ab8"
+}
+
