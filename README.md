@@ -1,37 +1,108 @@
-# Male Fashion
+# Male Fashion (Ecommerce App)
 
-Foobar is a Python library for dealing with word pluralization.
+Male-fashsion is a fashion Ecommerce Web Application with the functionalities
+like login/Signup(Users),OTP(Twilio) with Login,Add to Cart,Wishlist,Wallet,
+Checkout,Payment Gateways(Paypal,RazorPay),Profile,Order Management 
+and all other basic functionalities of an Ecommerce application.
+Also Admin from Other side can manage all the activities in the client 
+side with all required functions,Stats,Graphs,Reports and So on...
 
-## Installation
 
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install foobar.
+## API Reference
+
+
+
+#### Get HomePage
+
+```http
+  GET /malefashion.ml
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `api_key` | `string` | **Required**. Your API key |
+
+#### Get Login/Register
+
+```http
+  GET /malefashion.ml/signuplogin
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `api_key` | `string` | **Required**. Your API key |
+
+
+
+
+#### Get all Products
+
+```http
+  GET /malefashion.ml/shop
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `api_key` | `string` | **Required**. Your API key |
+
+
+#### Get Product Detail of  each Product
+
+```http
+  GET /malefashion.ml/productdetails/${id}
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `id`      | `string` | **Required**. Id of item to fetch |
+
+
+
+#### Get cart with purchased products
+
+```http
+  GET /malefashion.ml/cart
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `id`      | `string` | **Required**.|Your API key
+
+
+## Run Locally
+
+Clone the project
 
 ```bash
-pip install foobar
+  git clone https://github.com/vishalvarghese/Malefashion.git
 ```
 
-## Usage
+Go to the project directory
 
-```python
-import foobar
-
-# returns 'words'
-foobar.pluralize('word')
-
-# returns 'geese'
-foobar.pluralize('goose')
-
-# returns 'phenomenon'
-foobar.singularize('phenomena')
+```bash
+  cd Malefashion
 ```
 
-## Contributing
+Install dependencies
 
-Pull requests are welcome. For major changes, please open an issue first
-to discuss what you would like to change.
+```bash
+  npm install
+```
 
-Please make sure to update tests as appropriate.
+Start the server
 
-## License
+```bash
+  npm run start
+```
 
-[MIT](https://choosealicense.com/licenses/mit/)
+
+## 🚀 About Me
+I'm Vishal varghese jans, full stack developer...
+
+
+## 🔗 Links
+[![portfolio](https://img.shields.io/badge/my_portfolio-000?style=for-the-badge&logo=ko-fi&logoColor=white)](https://vishalvarghese.github.io/portfolio/)
+[![linkedin](https://img.shields.io/badge/linkedin-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/vishalvjans/)
+
+
+
