@@ -33,7 +33,7 @@ router.post('/signuplogin', async function (req, res) {
       message: "Details incomplete", type: "error"
     })
   }
-  else if (((personinfo.username).length < 4) || (personinfo.username).match(' ' + ' ') || !(personinfo.username).match(/^[a-zA-Z]+( [a-zA-Z]+)+$/)) {
+  else if (((personinfo.username).length < 4)) {
     res.render('signuppage', {
       type: "username rule"
     })
