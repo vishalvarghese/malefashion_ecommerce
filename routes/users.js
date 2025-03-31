@@ -55,11 +55,7 @@ router.post('/login', async (req, res) => {
 
 
 router.get('/shop', async function (req, res) {
-  if (req.session.userA) {
     let categorydetails = await category.find()
-    console.log(categorydetails);
-
-    console.log(req.query.id)
     if (req.query.id == undefined) {
       await product.find((err, data) => {
         res.render('shop', { productdetails: data, categorydetails });
@@ -71,10 +67,6 @@ router.get('/shop', async function (req, res) {
       }).clone()
 
     }
-  }
-  else {
-    res.redirect('/signuplogin')
-  }
 
 })
 
@@ -90,9 +82,7 @@ router.get('/productdetails', async function (req, res) {
       console.log('id find product error')
     }
     else {
-
       let relatedproducts = await product.find({ productcategory: docs.productcategory })
-      console.log(relatedproducts);
       res.render('product-details', { product: docs, relatedproducts })
     }
 
@@ -121,8 +111,6 @@ router.post('/generateOTP', async (req, res) => {
       client.verify.v2.services(process.env.twilioverify).verifications
         .create({ to: '+91' + Mobilenumber, channel: 'sms' })
         .then((data) => {
-          console.log("its here");
-          //number transfered
           res.render('logintry', { display: "otpgenerated", number: Mobilenumber })
         })
         .catch((err) => console.log('it an error', err))
@@ -207,7 +195,6 @@ router.get('/addtowishlist', async (req, res) => {
     let docs = await user.find({ useremail: req.session.userA })
     let id = docs[0]._id
 
-    //console.log(req.query.id);
     let wishlist = await wishlistone.find({ UserId: id })
 
     if (wishlist == '') {

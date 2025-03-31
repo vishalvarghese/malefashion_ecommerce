@@ -6,14 +6,8 @@ const user = require('./modal/userschema');
 const product = require('./modal/productschema')
 /* GET home page. */
 router.get('/', async function (req, res, next) {
-  if (req.session.userA) {
-    res.redirect('/shop')
-  }
-  else {
     let data = await product.find()
-    console.log(data);
     res.render('index', { data });
-  }
 });
 
 router.get('/signuplogin', function (req, res) {
