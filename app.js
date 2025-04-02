@@ -51,7 +51,7 @@ const { config } = require('dotenv');
 //  mongoose.connect('mongodb://localhost:27017/Malefashion',{
 mongoose.connect('mongodb+srv://vishalvjdeveloper:nEX0dEMOp1VQYgAx@cluster0male.fe1msci.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Male',{ 
 useNewUrlParser:true,
-},(err,data)=>{    
+},(err,data)=>{
  if(err){
    console.log("Db Error");
  }else{
