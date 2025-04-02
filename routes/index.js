@@ -75,14 +75,15 @@ router.post('/signuplogin', async function (req, res) {
         userreferralcode: 'ABC' + (Math.round((Math.random() * 90000)) + 10000)
 
       })
-      newuser.save(function (err, person) {
-        if (err) {
-          res.render('signuppage', { message: "Database error", type: "error" })
-          console.log('Db error in ')
-        }
-        else
-          res.render('logintry', { message: "new person added", type: "referralsuccess" })
-      })
+      // newuser.save(function (err, person) {
+      //   if (err) {
+      //     res.render('signuppage', { message: "Database error", type: "error" })
+      //     console.log('Db error in ')
+      //   }
+      //   else
+      //     res.render('logintry', { message: "new person added", type: "referralsuccess" })
+      // })
+      
 
     }
 
@@ -109,14 +110,13 @@ router.post('/signuplogin', async function (req, res) {
         userreferralcode: 'ABC' + (Math.round((Math.random() * 90000)) + 10000)
 
       })
-      newuser.save(function (err, person) {
-        if (err) {
-          res.render('signuppage', { message: "Database error", type: "error" })
-          console.log('Db error in ')
-        }
-        else
-          res.render('logintry', { message: "new person added", type: "success" })
-      })
+      try {
+        await newuser.save();
+        res.render('logintry', { message: "New person added", type: "success" });
+      } catch (err) {
+        console.error("Database error:", err);
+        res.render('signuppage', { message: "Database error", type: "error" });
+      }
 
     }
 

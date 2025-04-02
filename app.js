@@ -60,15 +60,21 @@ app.use('/',adminrouter);
 const mongoose= require('mongoose');
 const { config } = require('dotenv');
 //  mongoose.connect('mongodb://localhost:27017/Malefashion',{
-mongoose.connect('mongodb+srv://vishalvjdeveloper:nEX0dEMOp1VQYgAx@cluster0male.fe1msci.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Male',{ 
-useNewUrlParser:true,
-},(err,data)=>{
- if(err){
-   console.log("Db Error");
- }else{
-   console.log('Db Connected...');
- }
-});    
+// mongoose.connect('mongodb+srv://vishalvjdeveloper:nEX0dEMOp1VQYgAx@cluster0male.fe1msci.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0Male',{ 
+// useNewUrlParser:true,
+// },(err,data)=>{
+//  if(err){
+//    console.log("Db Error");
+//  }else{
+//    console.log('Db Connected...');
+//  }
+// }); 
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => console.log('Connected to MongoDB'))
+.catch(err => console.error('MongoDB connection error:', err));   
 
 //const user=require('./routes/userschema');
 
