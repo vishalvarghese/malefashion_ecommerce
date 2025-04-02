@@ -27,12 +27,23 @@ app.use(express.static(path.join(__dirname, 'public')));
 
  //cookie
  const maxAge=24*60*60*1000;
- app.use(session({
-   secret:uuidv4(),// 'ib9d6bcd-bbfd-4b2d-9b5d'
-   resave:false,
-   saveUninitialized:true,
-   cookie:{maxAge:maxAge}
- }));
+//  app.use(session({
+//    secret:uuidv4(),// 'ib9d6bcd-bbfd-4b2d-9b5d'
+//    resave:false,
+//    saveUninitialized:true,
+//    cookie:{maxAge:maxAge}
+//  }));
+
+const MongoStore = require('connect-mongo');
+
+app.use(session({
+  store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
+  secret: uuidv4(),
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: process.env.NODE_ENV === 'production' }
+}));
+
 
  app.use((req,res,next)=>{
   if(!req.user){
