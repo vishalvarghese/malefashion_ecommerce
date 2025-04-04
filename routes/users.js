@@ -72,42 +72,29 @@ router.post('/login', async (req, res) => {
 });
 
 
+
 router.get('/shop', async function (req, res) {
-    let categorydetails = await category.find()
-    if (req.query.id == undefined) {
-      await product.find((err, data) => {
-        res.render('shop', { productdetails: data, categorydetails });
-      }).clone()
-    }
-    else {
-      await product.find({ productcategory: req.query.id }, (err, data) => {
-        res.render('shop', { productdetails: data, categorydetails });
-      }).clone()
+  try {
+      let categorydetails = await category.find();
 
-    }
+      let query = req.query.id ? { productcategory: req.query.id } : {};
+      
+      product.find(query)
+          .then(data => {
+              res.render('shop', { productdetails: data, categorydetails });
+          })
+          .catch(err => {
+              console.error(err);
+              res.status(500).send("Internal Server Error");
+          });
 
-})
-
-
-
-// router.get('/productdetails', async function (req, res) {
-
-//   var aid = req.query.id;
-
-
-//   await product.findById(aid, async function (err, docs) {
-//     if (err) {
-//       console.log('id find product error')
-//     }
-//     else {
-//       let relatedproducts = await product.find({ productcategory: docs.productcategory })
-//       res.render('product-details', { product: docs, relatedproducts })
-//     }
-
-//   }).clone()
+  } catch (error) {
+      console.error(error);
+      res.status(500).send("Internal Server Error");
+  }
+});
 
 
-// })
 
 router.get('/productdetails', async function (req, res) {
   try {
@@ -233,6 +220,56 @@ router.get('/userlogout', (req, res) => {
 //   }
 // })
 
+router.get('/wishlist', (req, res) => {
+  if (req.session.userA) {
+    user.find({ useremail: req.session.userA }).then(docs => {
+      const userid = docs[0]._id;
+
+      wishlistone.aggregate([
+        { $match: { UserId: userid } },
+        { $unwind: '$Product' },
+        {
+          $project: {
+            wishid: '$_id',
+            ItemId: '$Product.ItemId',
+            Quantity: '$Product.Quantity'
+          }
+        },
+        {
+          $lookup: {
+            from: 'products',
+            localField: 'ItemId',
+            foreignField: '_id',
+            as: 'wishdisplayproduct'
+          }
+        },
+        {
+          $project: {
+            wishid: 1,
+            ItemId: 1,
+            Quantity: 1,
+            wishdisplayproduct: { $arrayElemAt: ['$wishdisplayproduct', 0] }
+          }
+        }
+      ]).then(wishProduct => {
+        console.log(wishProduct);
+        res.render('wishlist', { wishdetails: wishProduct });
+      }).catch(err => {
+        console.error("Error in wishlist aggregation:", err);
+        res.status(500).send("Internal Server Error");
+      });
+
+    }).catch(err => {
+      console.error("Error fetching user:", err);
+      res.status(500).send("Internal Server Error");
+    });
+
+  } else {
+    res.redirect('/signuplogin');
+  }
+});
+
+
 
 // router.get('/addtowishlist', async (req, res) => {
 //   if (req.session.userA) {
@@ -287,6 +324,76 @@ router.get('/userlogout', (req, res) => {
 //   }
 
 // })
+
+router.get('/addtowishlist', (req, res) => {
+  if (req.session.userA) {
+    user.find({ useremail: req.session.userA }).then(docs => {
+      const id = docs[0]._id;
+
+      wishlistone.find({ UserId: id }).then(wishlist => {
+        if (wishlist.length === 0) {
+          // Create new wishlist for the user
+          const wish_schema = new wishlistone({
+            UserId: id,
+            Product: [{
+              ItemId: req.query.id,
+              Quantity: 1
+            }]
+          });
+
+          wish_schema.save().then(() => {
+            return wishlistone.find({ UserId: id });
+          }).then(wishnew => {
+            console.log("New wishlist formed:", wishnew);
+            res.redirect('/wishlist');
+          }).catch(err => {
+            console.error("Error creating wishlist:", err);
+            res.status(500).send("Internal Server Error");
+          });
+
+        } else {
+          wishlistone.findOne({
+            $and: [
+              { UserId: id },
+              { Product: { $elemMatch: { ItemId: req.query.id } } }
+            ]
+          }).then(data => {
+            if (data) {
+              console.log('Already in wishlist');
+              res.redirect('/wishlist');
+            } else {
+              // Add product to wishlist
+              wishlistone.updateOne(
+                { UserId: id },
+                { $push: { Product: { ItemId: req.query.id, Quantity: 1 } } }
+              ).then(() => {
+                console.log('Product added to wishlist');
+                res.redirect('/wishlist');
+              }).catch(err => {
+                console.error("Failed to update wishlist:", err);
+                res.status(500).send("Internal Server Error");
+              });
+            }
+          }).catch(err => {
+            console.error("Error checking if item exists:", err);
+            res.status(500).send("Internal Server Error");
+          });
+        }
+      }).catch(err => {
+        console.error("Error finding wishlist:", err);
+        res.status(500).send("Internal Server Error");
+      });
+
+    }).catch(err => {
+      console.error("Error finding user:", err);
+      res.status(500).send("Internal Server Error");
+    });
+
+  } else {
+    res.redirect('/signuplogin');
+  }
+});
+
 
 // router.get('/addtocart', async (req, res) => {
 //   if (req.session.userA) {
